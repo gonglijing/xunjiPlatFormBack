@@ -1,0 +1,36 @@
+package model
+
+import "sagooiot/internal/consts"
+
+type PaginationInput struct {
+	KeyWord   string   `json:"keyWord" dc:"搜索关键字"` //搜索关键字
+	DateRange []string `p:"dateRange"`             //日期范围
+	OrderBy   string   //排序方式
+	PageNum   int      `json:"pageNum" in:"query" d:"1"  v:"min:0#分页号码错误"     dc:"分页号码，默认1"`
+	PageSize  int      `json:"PageSize" in:"query" d:"10" v:"max:500#分页数量最大500条" dc:"分页数量，最大500"`
+}
+
+func (p *PaginationInput) Normalize() {
+	if p == nil {
+		return
+	}
+	if p.PageNum <= 0 {
+		p.PageNum = 1
+	}
+	if p.PageSize <= 0 {
+		p.PageSize = consts.PageSize
+	}
+}
+
+func EnsurePaginationInput(p *PaginationInput) *PaginationInput {
+	if p == nil {
+		p = &PaginationInput{}
+	}
+	p.Normalize()
+	return p
+}
+
+type PaginationOutput struct {
+	CurrentPage int `json:"currentPage" dc:"当前页"`
+	Total       int `dc:"总数"`
+}

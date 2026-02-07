@@ -1,0 +1,11 @@
+panic: assignment to entry in nil map
+
+goroutine 756 [running]:
+sagooiot/internal/sse/sysenv.GetHostInfo()
+	/Users/mac/workspace/xunji/platform/backend/internal/sse/sysenv/sysenv.go:23 +0xec
+sagooiot/internal/sse.runSysEnv()
+	/Users/mac/workspace/xunji/platform/backend/internal/sse/sysenv_enevt.go:15 +0x44
+sagooiot/internal/sse.Init.func1(...)
+	/Users/mac/workspace/xunji/platform/backend/internal/sse/base.go:14
+created by sagooiot/internal/sse.Init in goroutine 1
+	/Users/mac/workspace/xunji/platform/backend/internal/sse/base.go:12 +0x9c
