@@ -1,29 +1,122 @@
-.buildpath
-.hgignore.swp
-.project
-.orig
-.swp
-.idea/
-.settings/
-.vscode/
-*.iml
-vendor/
-composer.lock
-gitpush.sh
-bin/
-cbuild
-**/.DS_Store
-.test/
+# ==========================================
+# Go / GoFrame Project .gitignore
+# ==========================================
+
+# ==========================================
+# Go Build Artifacts
+# ==========================================
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+*.exe
+*.exe
+
+# GoFrame binary output
+goframe*
+gf
 main
+
+# Build directories
+bin/
+cbuild/
+build/
 output/
 manifest/output/
-manifest/config/config.yaml
+
+# ==========================================
+# Go Module Files
+# ==========================================
+go.sum
+
+# ==========================================
+# IDE and Editor Directories
+# ==========================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+.classpath
+.prettierrc
+.prettierignore
+.eslintrc
+.eslintignore
+.stylelintrc
+.stylelintignore
+.editorconfig
+.gitattributes
+.gitignore
+
+# GoLand
+*.iml
+.idea/
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ==========================================
+# OS Generated Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.pem
+
+# ==========================================
+# Application Directories & Files
+# ==========================================
 temp/
+logs/
 resource/log/
 resource/public/*
-logs/
-upload/product_icon/
+!resource/public/.gitkeep
 extend/log/
 hack/config.yaml
-go.sum
-gf
+upload/product_icon/
+manifest/config/config.yaml
+
+# ==========================================
+# Test & Coverage
+# ==========================================
+*.coverprofile
+coverage.out
+cover.html
+.test/
+*.test
+
+# ==========================================
+# Temporary Files
+# ==========================================
+*.tmp
+*.bak
+*.backup
+*.orig
+*.rej
+*.*~
+*.log
+tmp/
+*.log.*
+
+# ==========================================
+# Misc
+# ==========================================
+*.md.bak
+README.md.bak
+gitpush.sh
