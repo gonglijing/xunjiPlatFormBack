@@ -91,6 +91,7 @@ extend/log/
 hack/config.yaml
 upload/product_icon/
 manifest/config/config.yaml
+ui
 
 # ==========================================
 # Test & Coverage
