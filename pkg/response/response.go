@@ -19,14 +19,22 @@ type JsonRes struct {
 	//Redirect string      `json:"redirect"` // 引导客户端跳转到指定路由
 }
 
+func firstResponseData(data []interface{}, fallback interface{}) interface{} {
+	if len(data) > 0 {
+		return data[0]
+	}
+	return fallback
+}
+
+func writeAttachment(r *ghttp.Request, fileName string, content io.ReadSeeker, contentType string) {
+	r.Response.Writer.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
+	r.Response.Writer.Header().Add("Content-Type", contentType)
+	http.ServeContent(r.Response.Writer, r.Request, fileName, time.Now(), content)
+}
+
 // Json 返回标准JSON数据。
 func Json(r *ghttp.Request, code int, message string, data ...interface{}) {
-	var responseData interface{}
-	if len(data) > 0 {
-		responseData = data[0]
-	} else {
-		responseData = g.Map{}
-	}
+	responseData := firstResponseData(data, g.Map{})
 	r.Response.WriteJson(JsonRes{
 		Code:    code,
 		Message: message,
@@ -42,10 +50,7 @@ func JsonExit(r *ghttp.Request, code int, message string, data ...interface{}) {
 
 // JsonRedirect 返回标准JSON数据引导客户端跳转。
 func JsonRedirect(r *ghttp.Request, code int, message, redirect string, data ...interface{}) {
-	responseData := interface{}(nil)
-	if len(data) > 0 {
-		responseData = data[0]
-	}
+	responseData := firstResponseData(data, nil)
 	r.Response.WriteJson(JsonRes{
 		Code:    code,
 		Message: message,
@@ -63,11 +68,8 @@ func JsonRedirectExit(r *ghttp.Request, code int, message, redirect string, data
 // ToXls 向前端返回Excel文件 参数 content 为上面生成的io.ReadSeeker， fileTag 为返回前端的文件名
 func ToXls(r *ghttp.Request, content io.ReadSeeker, fileTag string) {
 	fileName := fmt.Sprintf("%s%s%s.xlsx", gtime.Now().String(), `-`, fileTag)
-	r.Response.Writer.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
-	r.Response.Writer.Header().Add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	http.ServeContent(r.Response.Writer, r.Request, fileName, time.Now(), content)
+	writeAttachment(r, fileName, content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 	r.ExitAll()
-	return
 }
 
 // ToPlainText 输出流
@@ -80,10 +82,12 @@ func ToPlainText(r *ghttp.Request, content []byte, fileName string) {
 
 // ToJsonFIle 向前端返回文件 参数 content 为上面生成的io.ReadSeeker， fileTag 为返回前端的文件名
 func ToJsonFIle(r *ghttp.Request, content io.ReadSeeker, fileTag string) {
+	ToJsonFile(r, content, fileTag)
+}
+
+// ToJsonFile 向前端返回文件 参数 content 为上面生成的io.ReadSeeker， fileTag 为返回前端的文件名
+func ToJsonFile(r *ghttp.Request, content io.ReadSeeker, fileTag string) {
 	fileName := fmt.Sprintf("%s%s%s.json", gtime.Now().Format("20060102150405"), `-`, fileTag)
-	r.Response.Writer.Header().Add("Content-Disposition", fmt.Sprintf(`attachment; filename="%s"`, fileName))
-	r.Response.Writer.Header().Add("Content-Type", "application/json")
-	http.ServeContent(r.Response.Writer, r.Request, fileName, time.Now(), content)
+	writeAttachment(r, fileName, content, "application/json")
 	r.ExitAll()
-	return
 }
